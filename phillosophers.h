@@ -6,14 +6,23 @@
 # include <pthread.h>
 # include <stdlib.h>
 
-typedef  struct s_phillo
+typedef  struct s_data
 {
     int n_phillo;
-    int t_eat;
-    int t_die;
-    int t_sleep;
-    int t_think;
-    int t_mustEat;
+    size_t  t_eat;
+    size_t  t_die;
+    size_t  t_sleep;
+    size_t  t_think;
+    size_t  t_mustEat;
+    size_t  t_start;
+}   t_data;
 
-}   t_phillo
+typedef struct  s_phillo
+{
+    pthread_t   t1;
+    int         id;
+    size_t      t_current;
+    t_data      s_data;
+}   t_phillo;
+
 #endif
