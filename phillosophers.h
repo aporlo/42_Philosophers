@@ -25,4 +25,7 @@ typedef struct  s_phillo
     t_data      s_data;
 }   t_phillo;
 
+int     is_digit(int c);
+int	    validate(int argc, char **argv);
+
 #endif
