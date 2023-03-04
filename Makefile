@@ -10,6 +10,9 @@ INCLUDES =	-I$(INCLUDE_DIR)
 SRC_DIR = srcs
 SRCS =	main.c \
 		validate.c \
+		init.c \
+		routine.c \
+		get_time.c \
 
 BUILD_DIR = build
 

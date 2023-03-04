@@ -26,7 +26,6 @@ int	validate(int argc, char **argv)
 	int	j;
 
 	i = 1;
-	printf("argc is %d\n", argc);
 	if (argc >= 5 && argc <= 6)
 	{
 		while (i < argc)
