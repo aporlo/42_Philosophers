@@ -100,6 +100,10 @@ void    create_thread(t_philo   *philo, t_data *data)
         new_join = new_join->next;
         i++;
     }
+    if (pthread_detach(philo->t1) != 0)
+    {
+        write(2, "Failed to detach", 16);
+    }
     // while(check_die(philo) == 0)
     //     ;
     usleep(500);
