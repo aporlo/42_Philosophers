@@ -50,6 +50,7 @@ void    thinking(t_philo *philo);
 long long   get_time();
 void    current_time(t_philo *philo, t_data *data);
 void    my_usleep(size_t time, t_philo *philo);
-int     check_die(t_philo *philo, size_t time);
+int     check_die(t_philo *philo);
+void    detach(t_philo *philo);
 
 #endif

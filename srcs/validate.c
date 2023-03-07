@@ -37,6 +37,11 @@ int	validate(int argc, char **argv)
 					return (0);
 				j++;
 			}
+			if (ft_atoi(argv[i]) <= 0)
+			{
+				printf("must positive\n");
+				return (0);
+			}
 			i++;
 		}
 		return (1);

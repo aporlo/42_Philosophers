@@ -8,9 +8,8 @@ void*    routine(void* arg)
     {
         if (philo->id % 2 == 0)
             usleep(50);
-        if (philo->data != NULL)
+        if (philo->data != NULL && philo->data->die == 0)
         {
-            // check_die(philo);
             pthread_mutex_lock(&philo->data->fork[philo->id % philo->data->n_philo]);
             pthread_mutex_lock(&philo->data->fork[philo->id - 1]);
             pthread_mutex_lock(&philo->data->print);
@@ -33,9 +32,8 @@ void*    routine(void* arg)
 
 void   eating(t_philo *philo)
 {
-    if (philo->data != NULL)
+    if (philo->data != NULL && philo->data->die == 0)
     {
-        // check_die(philo);
         pthread_mutex_lock(&philo->data->print);
         current_time(philo, philo->data);
         philo->t_eating = philo->t_current;
@@ -43,13 +41,12 @@ void   eating(t_philo *philo)
         printf("%s\n", "is eating");
         pthread_mutex_unlock(&philo->data->print);
         my_usleep(philo->data->t_eat, philo);
-        // printf("%zu ms %d ",philo->data->t_eat, philo->id);
     }
 }
 
 void   phi_sleep(t_philo *philo)
 {
-    if (philo->data != NULL)
+    if (philo->data != NULL && philo->data->die == 0)
     {
         pthread_mutex_lock(&philo->data->print);
         current_time(philo, philo->data);
@@ -60,15 +57,13 @@ void   phi_sleep(t_philo *philo)
         pthread_mutex_unlock(&philo->data->print);
         my_usleep(philo->data->t_sleep, philo);
         philo->t_life += philo->data->t_sleep;
-        // check_die(philo);
     }
 }
 
 void   thinking(t_philo *philo)
 {
-    if (philo->data != NULL)
+    if (philo->data != NULL && philo->data->die == 0)
     {
-        // check_die(philo);
         pthread_mutex_lock(&philo->data->print);
         current_time(philo, philo->data);
         philo->t_eating = philo->t_current;
@@ -82,14 +77,17 @@ void    create_thread(t_philo   *philo, t_data *data)
 {
     int i;
     t_philo *new_join;
+    // t_philo *detach_philo;
     
     i = 0;
     new_join = philo;
     data->t_start = get_time();
+    // create(philo);
+    // join(philo);
+    // detach(philo);
     while(i < data->n_philo)
     {
         create(philo);
-        // check_die(philo);
         philo = philo->next;
         i++;
     }
@@ -100,46 +98,54 @@ void    create_thread(t_philo   *philo, t_data *data)
         new_join = new_join->next;
         i++;
     }
-    if (pthread_detach(philo->t1) != 0)
-    {
-        write(2, "Failed to detach", 16);
-    }
-    // while(check_die(philo) == 0)
-    //     ;
     usleep(500);
 }
-void create(t_philo *philo)
+void    create(t_philo *philo)
 {
-    if (pthread_create(&philo->t1, NULL, &routine, (void*)philo) != 0)
-    {
-        write(2, "Failed to create thread", 23);
-    }
+    // int i;
+    
+    // i = 0;
+    // while(i < philo->data->n_philo)
+    // {
+        if (pthread_create(&philo->t1, NULL, &routine, (void*)philo) != 0)
+            printf("Failed to create thread");
+        // philo = philo->next;
+        // i++;
+    // }
 }
 
 void    join(t_philo *philo)
 {
     if (pthread_join(philo->t1, (void*)philo) != 0)
-        write(2, "Failed to join thread", 21);
+        printf("Failed to join thread");
 }
 
-int check_die(t_philo *philo, size_t time)
+void    detach(t_philo *philo)
 {
-    (void)time;
-    // while (philo)
-    // {
-        // printf("%zu ms\n", philo->t_life);
-        if (philo->t_life > philo->data->t_die)
-        {
-            philo->data->die = philo->id;
-            // printf("life is %zu ms %d\n", philo->t_life, philo->id);
-            // printf("life is %zu ms %d\n", philo->t_current, philo->id);
-            // printf("life is %zu ms %d\n", time, philo->id);
-            printf("%zu ms %d ", philo->t_life, philo->id);
-            printf("%s\n", "died");
-            exit(1);
-            return (1);
-        }
-        // philo = philo->next; 
-    // }
+    int i;
+    
+    i = 0;
+    while(i < philo->data->n_philo)
+    {
+        if (pthread_detach(philo->t1) != 0)
+            printf("Failed to detach\n");
+        philo = philo->next;
+        i++;
+    }
+}
+
+int check_die(t_philo *philo)
+{
+    if (philo->t_life >= philo->data->t_die)
+    {
+        pthread_mutex_lock(&philo->data->print);
+        philo->data->die = philo->id;
+        printf("%zu ms %d ", philo->t_life, philo->id);
+        printf("%s\n", "died");
+        // usleep(500);
+        pthread_mutex_unlock(&philo->data->print);
+        pthread_mutex_destroy(&philo->data->print);
+        return (philo->id);
+    }
     return (0);
 }

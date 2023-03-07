@@ -62,7 +62,6 @@ t_philo    *create_philo(t_data *data, int id)
     philo->data = data;
     philo->n_eat = 0;
     philo->next = NULL;
-
     return philo;
 }
 
