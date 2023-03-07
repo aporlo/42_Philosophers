@@ -15,9 +15,7 @@ int	main(int argc, char **argv)
 {
 	t_data 	data;
 	t_philo	*philo;
-	int i;
 
-	i = 0;
 	philo = NULL;
 	if (!validate(argc, argv))
 		return (0);
