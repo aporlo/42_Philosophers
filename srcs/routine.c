@@ -1,14 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   routine.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lsomrat <lsomrat@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/07 16:24:00 by lsomrat           #+#    #+#             */
+/*   Updated: 2023/03/07 16:24:01 by lsomrat          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "phillosophers.h"
 void*    routine(void* arg)
 {
     t_philo *philo;
 
     philo = (t_philo*) arg;
-    while(philo->data->die == 0)
+
+    while(philo->status == 0)
     {
         if (philo->id % 2 == 0)
             usleep(50);
-        if (philo->data != NULL && philo->data->die == 0)
+        // printf("status is %d\n", philo_die(philo));
+        if (philo->data != NULL && philo->status == 0)
         {
             pthread_mutex_lock(&philo->data->fork[philo->id % philo->data->n_philo]);
             pthread_mutex_lock(&philo->data->fork[philo->id - 1]);
@@ -20,12 +34,14 @@ void*    routine(void* arg)
             printf("%s\n", "has taken a fork");
             pthread_mutex_unlock(&philo->data->print);
             eating(philo);
+            // if (philo->status == S_DIED)
+            //     return(NULL);
             pthread_mutex_unlock(&philo->data->fork[philo->id % philo->data->n_philo]);
             pthread_mutex_unlock(&philo->data->fork[philo->id - 1]);
             phi_sleep(philo);
             thinking(philo);
         }
-        
+
     }
     return arg;
 }
@@ -58,6 +74,7 @@ void   phi_sleep(t_philo *philo)
         my_usleep(philo->data->t_sleep, philo);
         philo->t_life += philo->data->t_sleep;
     }
+
 }
 
 void   thinking(t_philo *philo)
@@ -77,22 +94,18 @@ void    create_thread(t_philo   *philo, t_data *data)
 {
     int i;
     t_philo *new_join;
-    // t_philo *detach_philo;
-    
+
     i = 0;
     new_join = philo;
     data->t_start = get_time();
-    // create(philo);
-    // join(philo);
-    // detach(philo);
-    while(i < data->n_philo)
+    while (i < data->n_philo)
     {
         create(philo);
         philo = philo->next;
         i++;
     }
     i = 0;
-    while(i < data->n_philo)
+    while (i < data->n_philo)
     {
         join(new_join);
         new_join = new_join->next;
@@ -102,28 +115,21 @@ void    create_thread(t_philo   *philo, t_data *data)
 }
 void    create(t_philo *philo)
 {
-    // int i;
-    
-    // i = 0;
-    // while(i < philo->data->n_philo)
-    // {
-        if (pthread_create(&philo->t1, NULL, &routine, (void*)philo) != 0)
-            printf("Failed to create thread");
-        // philo = philo->next;
-        // i++;
-    // }
+    if (pthread_create(&philo->t1, NULL, &routine, (void*)philo) != 0)
+        printf("Failed to create thread");
 }
 
 void    join(t_philo *philo)
 {
     if (pthread_join(philo->t1, (void*)philo) != 0)
         printf("Failed to join thread");
+    // pthread_join(philo->t1, NULL);
 }
 
 void    detach(t_philo *philo)
 {
     int i;
-    
+
     i = 0;
     while(i < philo->data->n_philo)
     {
@@ -142,10 +148,25 @@ int check_die(t_philo *philo)
         philo->data->die = philo->id;
         printf("%zu ms %d ", philo->t_life, philo->id);
         printf("%s\n", "died");
-        // usleep(500);
+        philo->status = S_DIED;
         pthread_mutex_unlock(&philo->data->print);
         pthread_mutex_destroy(&philo->data->print);
         return (philo->id);
+    }
+    return (0);
+}
+
+int philo_die(t_philo *philo)
+{
+    int i;
+
+    i = 0;
+    while(i < philo->data->n_philo)
+    {
+        if (philo->status == S_DIED)
+            return (1);
+        philo = philo->next;
+        i++;
     }
     return (0);
 }
