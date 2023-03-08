@@ -25,11 +25,12 @@ typedef  struct s_data
 {
     int     n_philo;
     int     die;
+    int     count_eat;
     size_t  t_eat;
     size_t  t_die;
     size_t  t_sleep;
     size_t  t_think;
-    size_t  t_mustEat;
+    int     n_mustEat;
     size_t  t_start;
     pthread_mutex_t *fork;
     pthread_mutex_t print;
@@ -65,8 +66,8 @@ void    thinking(t_philo *philo);
 long long   get_time();
 void    current_time(t_philo *philo, t_data *data);
 void    my_usleep(size_t time, t_philo *philo);
-int     check_die(t_philo *philo);
-void    detach(t_philo *philo);
+void     check_die(t_philo *philo);
 int     philo_die(t_philo *philo);
+void    print_ph(t_philo *philo, char *status);
 
 #endif

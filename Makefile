@@ -13,6 +13,7 @@ SRCS =	main.c \
 		init.c \
 		routine.c \
 		get_time.c \
+		util.c \
 
 BUILD_DIR = build
 
