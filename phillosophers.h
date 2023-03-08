@@ -17,12 +17,14 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <stdlib.h>
-#include <sys/time.h>
+# include <sys/time.h>
+
+# define S_DIED 1
 
 typedef  struct s_data
 {
-    int n_philo;
-    int die;
+    int     n_philo;
+    int     die;
     size_t  t_eat;
     size_t  t_die;
     size_t  t_sleep;
@@ -37,12 +39,13 @@ typedef struct  s_philo
 {
     pthread_t           t1;
     int                 id;
+    int                 status;
+    int                 n_eat;
     size_t              t_current;
     size_t              t_life;
     size_t              t_eating;
     t_data              *data;
     struct s_philo      *next;
-    int                 n_eat;
 }   t_philo;
 
 int     is_digit(int c);
@@ -64,5 +67,6 @@ void    current_time(t_philo *philo, t_data *data);
 void    my_usleep(size_t time, t_philo *philo);
 int     check_die(t_philo *philo);
 void    detach(t_philo *philo);
+int     philo_die(t_philo *philo);
 
 #endif

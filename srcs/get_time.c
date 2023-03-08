@@ -47,5 +47,7 @@ void   my_usleep(size_t time, t_philo *philo)
         start = get_time();
         philo->t_life = life + (time - (end - start));
         check_die(philo);
+        if (philo->status == S_DIED)
+            return ;
     }
 }
