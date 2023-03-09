@@ -43,25 +43,25 @@ void	init_data(char **argv, t_data *data)
 	i = 0;
 	data->n_philo = ft_atoi(argv[1]);
 	data->die = 0;
-    data->count_eat = 0;
+	data->count_eat = 0;
 	data->t_die = ft_atoi(argv[2]);
 	data->t_eat = ft_atoi(argv[3]);
 	data->t_sleep = ft_atoi(argv[4]);
 	data->t_think = 0;
 	if (argv[5])
-		data->n_mustEat = ft_atoi(argv[5]);
+		data->n_musteat = ft_atoi(argv[5]);
 	else
-		data->n_mustEat = 0;
+		data->n_musteat = 0;
 	data->t_start = 0;
 	data->fork = malloc(sizeof(pthread_mutex_t) * data->n_philo);
 	while (i < data->n_philo)
 	{
 		if (pthread_mutex_init(&data->fork[i], NULL) != 0)
-			write(2, "Failed to mutex init", 20);
+			printf("Failed to mutex init\n");
 		i++;
 	}
 	if (pthread_mutex_init(&data->print, NULL) != 0)
-		write(2, "Failed to mutex init", 20);
+		printf("Failed to mutex init\n");
 }
 
 t_philo	*create_philo(t_data *data, int id)
@@ -93,21 +93,17 @@ void	add_philo(t_philo **philo, t_data *data)
 	}
 }
 
-void	philoadd_back(t_philo  **philo, t_philo *new)
+void	philoadd_back(t_philo	**philo, t_philo *new)
 {
-	t_philo *last;
+	t_philo	*last;
 
 	if (*philo == NULL)
-	{
 		*philo = new;
-    }
-    else
-    {
-        last = *philo;
-        while (last->next)
-        {
-            last = last->next;
-        }
-        last->next = new;
-    }
+	else
+	{
+		last = *philo;
+		while (last->next)
+			last = last->next;
+		last->next = new;
+	}
 }

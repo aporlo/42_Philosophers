@@ -48,3 +48,18 @@ int	validate(int argc, char **argv)
 	}
 	return (0);
 }
+
+int	check_limit(t_data data)
+{
+	if (data.t_eat < 60 || data.t_sleep < 60 || data.t_die < 60)
+	{
+		printf("eat time and sleep time must not under 60ms");
+		return (0);
+	}
+	if (data.n_philo > 200)
+	{
+		printf("philo no more than 200 philosophers\n");
+		return (0);
+	}
+	return (1);
+}

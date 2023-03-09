@@ -14,6 +14,7 @@ SRCS =	main.c \
 		routine.c \
 		get_time.c \
 		util.c \
+		activities.c \
 
 BUILD_DIR = build
 
