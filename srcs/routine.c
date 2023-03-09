@@ -6,7 +6,7 @@
 /*   By: lsomrat <lsomrat@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 16:24:00 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/03/07 16:24:01 by lsomrat          ###   ########.fr       */
+/*   Updated: 2023/03/09 21:49:47 by lsomrat          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,16 @@ void	*routine(void *arg)
 		my_usleep(philo->data->t_die, philo);
 	while (philo->data->die == 0)
 	{
+		printf("data is%d\n", philo->data->die);
 		n_philo = philo->data->n_philo;
 		count = philo->data->count_eat;
 		if (philo->data->n_musteat > 0 && n_philo == count)
 			break ;
 		if (philo->data != NULL && philo->data->die == 0)
 			dinning(philo);
+		printf("hello1\n");
 	}
+	printf("hello2\n");
 	return (arg);
 }
 
