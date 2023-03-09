@@ -32,9 +32,7 @@ void	*routine(void *arg)
 			break ;
 		if (philo->data != NULL && philo->data->die == 0)
 			dinning(philo);
-		printf("hello1\n");
 	}
-	printf("hello2\n");
 	return (arg);
 }
 

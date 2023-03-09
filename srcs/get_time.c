@@ -42,7 +42,7 @@ void	my_usleep(size_t time, t_philo *philo)
 	start = get_time();
 	end = start + time;
 	usleep(1000);
-	while (start < end)
+	while (start < end && philo->data->die == 0)
 	{
 		start = get_time();
 		philo->t_life = life + (time - (end - start));
